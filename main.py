@@ -13,12 +13,14 @@ label = pg.text.Label('UNO',
                             x = window.width//2,
                             y = window.width//2,
                             anchor_x = 'center', anchor_y = 'center')
-card1 = Card(300, 300)
+cardImage = pg.image.load('reverse.png')
+card2 = pg.sprite.Sprite(cardImage, 100, 150)
+card2.scale = 0.3
+card2.rotation = 0
+card1 = Card(100, 300)
 @window.event
 def on_draw():
     window.clear()
-    pg.graphics.draw(4, pg.gl.GL_QUADS,
-    ('v3i', card1.get3())
-    )
     label.draw()
+    card2.draw()
 pg.app.run()

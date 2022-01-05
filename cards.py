@@ -1,3 +1,8 @@
+from re import S
+
+
+import pyglet as pg
+from pyglet.graphics import vertex_list
 class Card:
     def __init__(self, x, y):
         width = 100
@@ -24,3 +29,8 @@ class Card:
         self.y2 += y
         self.y3 += y
         self.y4 += y
+    def vertex(self):
+        vertex_list = pg.graphics.vertex_list(4,
+        ('v3f', self.get3())
+        )
+        return vertex_list
