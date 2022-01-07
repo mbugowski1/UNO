@@ -1,5 +1,5 @@
 import pyglet as pg
-from cards import Card
+from cards import *
 def x(percentage):
     return percentage * window.width / 100
 def y(percentage):
@@ -17,10 +17,11 @@ cardImage = pg.image.load('reverse.png')
 card2 = pg.sprite.Sprite(cardImage, 100, 150)
 card2.scale = 0.3
 card2.rotation = 0
-card1 = Card(100, 300)
+card1 = Card(50, 50, 200, 300, 20)
+batch = pg.graphics.Batch()
 @window.event
 def on_draw():
     window.clear()
     label.draw()
-    card2.draw()
+    card1.render()
 pg.app.run()
