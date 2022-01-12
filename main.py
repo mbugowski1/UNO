@@ -13,16 +13,44 @@ class Player:
         self.position = position
         self.playable = playable
         self.window = window
-        self.cards = [Card(0, 0)]
-
-        self.cards[0].back.colors = [0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0]
+        self.cards = []
+        if(position % 2 == 0):
+            self.maxSize = window.width - 20.0
+        else:
+            self.maxSize = window.height - 20.0
+    def addCards(self, count):
+        for x in range(count):
+            self.cards.append(Card())
+    def positionCards(self):
+        if (len(self.cards)%2 == 0):
+            parzyste = cardWidth/2+5
+        else:
+            parzyste = 0.0
+        lewo = 1
+        counter = 0
+        for card in self.cards:
+                    card.x = lewo * (parzyste + counter * (cardWidth + 10) )
+                    if (lewo == 1 and parzyste == 0.0):
+                        counter += 1
+                    elif (lewo != 1 and parzyste != 0.0):
+                        counter += 1
+                    lewo *= -1
+        def sorting(e):
+            return e.x
+        self.cards.sort(key=sorting)
+        for x in range(len(self.cards)):
+            self.cards[x].setOrder(x)
+            #self.cards[x].x *= 0.5
     def draw(self):
+        self.positionCards()
         pg.graphics.glPushMatrix()
-        print(self.window.height)
-        pg.graphics.glTranslatef(0.0, 100.0, 0.0)
-        self.cards[0].draw()
+        if(self.position == 0 or self.position == 2):
+            if (self.position == 2):
+                pg.graphics.glRotatef(180, 0, 0, 1)
+            pg.graphics.glTranslatef(0.0, -yRadius + cardHeight/2 + 20, 0.0)
+        for card in self.cards:
+            card.draw()
         pg.graphics.glPopMatrix()
-        
 class Window(pg.window.Window):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -33,8 +61,10 @@ class Window(pg.window.Window):
         pg.gl.glMatrixMode(pg.gl.GL_MODELVIEW)
         pg.gl.glLoadIdentity()
 
-        self.player = Player(0, False, self)
-        self.quad = pg.graphics.vertex_list(4, ('v3f', [368.0, 207.0, 0.0, 368.0, -207.0, 0.0, -100.0, -100.0, 0.0, -100.0, 100.0, 0.0]))
+        self.player = Player(0, True, self)
+        self.player3 = Player(2, False, self)
+        self.player.addCards(7)
+        self.player3.addCards(5)
 
     def on_resize(self, width, height):
         pg.gl.glViewport(0, 0, width, height)
@@ -45,9 +75,9 @@ class Window(pg.window.Window):
         pg.graphics.glRotatef(rotOX, 1, 0, 0)
         pg.graphics.glRotatef(rotOY, 0, 1, 0)
         #drawing models
-        #self.player.draw()
-        self.quad.draw(pg.graphics.GL_QUADS)
-        #self.verticalLine.draw(pg.graphics.GL_TRIANGLES)
+        self.player.draw()
+        self.player3.draw()
+        #self.quad.draw(pg.graphics.GL_QUADS)
         pg.graphics.glPopMatrix()
         
 
