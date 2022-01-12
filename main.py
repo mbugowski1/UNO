@@ -1,10 +1,28 @@
 import pyglet as pg
-from cards import Card
+from cards import Card, cardRadius, cardHeight, cardWidth
 
-distance = 500
+distance = 500.0
 rotOX = 0.0
 rotOY = 0.0
 
+xRadius = 368.0
+yRadius = 207.0
+
+class Player:
+    def __init__(self, position, playable, window):
+        self.position = position
+        self.playable = playable
+        self.window = window
+        self.cards = [Card(0, 0)]
+
+        self.cards[0].back.colors = [0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0]
+    def draw(self):
+        pg.graphics.glPushMatrix()
+        print(self.window.height)
+        pg.graphics.glTranslatef(0.0, 100.0, 0.0)
+        self.cards[0].draw()
+        pg.graphics.glPopMatrix()
+        
 class Window(pg.window.Window):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -15,10 +33,8 @@ class Window(pg.window.Window):
         pg.gl.glMatrixMode(pg.gl.GL_MODELVIEW)
         pg.gl.glLoadIdentity()
 
-        #drawing
-        self.card = Card(0, 0, self.width)
-        self.card.back.colors = [0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0]
-        #self.card.rotation = 180.0
+        self.player = Player(0, False, self)
+        self.quad = pg.graphics.vertex_list(4, ('v3f', [368.0, 207.0, 0.0, 368.0, -207.0, 0.0, -100.0, -100.0, 0.0, -100.0, 100.0, 0.0]))
 
     def on_resize(self, width, height):
         pg.gl.glViewport(0, 0, width, height)
@@ -29,7 +45,9 @@ class Window(pg.window.Window):
         pg.graphics.glRotatef(rotOX, 1, 0, 0)
         pg.graphics.glRotatef(rotOY, 0, 1, 0)
         #drawing models
-        self.card.draw()
+        #self.player.draw()
+        self.quad.draw(pg.graphics.GL_QUADS)
+        #self.verticalLine.draw(pg.graphics.GL_TRIANGLES)
         pg.graphics.glPopMatrix()
         
 
