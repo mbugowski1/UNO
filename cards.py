@@ -127,25 +127,27 @@ class Card:
                 cardWidth/2-cardRadius, -cardHeight/2+cardRadius, depth]
         color = [1.0, 0.0, 0.0] * 4
         return vertex_list(4, ('v3f', vertex), ('c3f', color))
-    def __init__(self, x, y):
+    def __init__(self):
         self.batch = Batch()
         self.depth = -10.0
         self.edges = Group()
         self.rotation = 0.0
-
-        self.x = x
-        self.y = y
+        self.x = 0
 
         #declare elements
+        self.selected = False
         self.cylinder = Cylinder(cardRadius, self.depth, [1.0, 1.0, 1.0], [0.0, 0.0, 0.0])
         self.CreateEdges([1.0, 1.0, 1.0], [0.0, 0.0, 0.0])
         self.front = self.createField(0.1)
         self.back = self.createField(self.depth-0.1)
-
+    def setOrder(self, number):
+        self.depth += number*0.2
     def draw(self):
         glPushMatrix()
-        glTranslatef(self.x, self.y, 0.0)
+        glTranslatef(self.x,0.0, self.depth)
         glRotatef(self.rotation, 0, 1, 0)
+        if (self.selected):
+                glScalef(1.25, 1.25, 1.25)
         self.batch.draw()
         self.DrawCylinders()
         self.front.draw(GL_QUADS)
