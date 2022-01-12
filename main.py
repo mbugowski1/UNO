@@ -14,13 +14,14 @@ class Player:
         self.playable = playable
         self.window = window
         self.cards = []
-        if(position % 2 == 0):
-            self.maxSize = window.width - 20.0
+        if(position == 0 or position == 2):
+            self.maxSize = xRadius - 168.0
         else:
-            self.maxSize = window.height - 20.0
+            self.maxSize = yRadius - 20.0
     def addCards(self, count):
         for x in range(count):
             self.cards.append(Card())
+        self.positionCards()
     def positionCards(self):
         if (len(self.cards)%2 == 0):
             parzyste = cardWidth/2+5
@@ -38,11 +39,12 @@ class Player:
         def sorting(e):
             return e.x
         self.cards.sort(key=sorting)
+        print(self.cards[len(self.cards)-1].x)
         for x in range(len(self.cards)):
             self.cards[x].setOrder(x)
-            #self.cards[x].x *= 0.5
+            if (self.cards[len(self.cards)-1].x > self.maxSize):
+                self.cards[x].x *= self.maxSize/self.cards[len(self.cards)-1].x
     def draw(self):
-        self.positionCards()
         pg.graphics.glPushMatrix()
         if(self.position == 0 or self.position == 2):
             if (self.position == 2):
@@ -63,8 +65,10 @@ class Window(pg.window.Window):
 
         self.player = Player(0, True, self)
         self.player3 = Player(2, False, self)
-        self.player.addCards(7)
+        self.player.addCards(11)
         self.player3.addCards(5)
+
+        self.player.cards[0].selected = True
 
     def on_resize(self, width, height):
         pg.gl.glViewport(0, 0, width, height)

@@ -143,8 +143,12 @@ class Card:
     def setOrder(self, number):
         self.depth += number*0.2
     def draw(self):
+        if (self.selected):
+            add = 20.0
+        else:
+            add = 0.0
         glPushMatrix()
-        glTranslatef(self.x,0.0, self.depth)
+        glTranslatef(self.x,0.0, self.depth + add)
         glRotatef(self.rotation, 0, 1, 0)
         if (self.selected):
                 glScalef(1.25, 1.25, 1.25)
