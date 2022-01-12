@@ -1,14 +1,9 @@
 import pyglet as pg
-from cards import Card2
+from cards import Card
 
 distance = 500
-rotOX = -45.0
-rotOY = -45.0
-
-def draw():
-    quadric = pg.gl.gluNewQuadric()
-    pg.gl.gluQuadricDrawStyle(quadric, pg.gl.GLU_LINE)
-    pg.graphics.gluCylinder(quadric, 20.0, 20.0, 30.0, 100, 1)
+rotOX = 0.0
+rotOY = 0.0
 
 class Window(pg.window.Window):
     def __init__(self, *args, **kwargs):
@@ -19,7 +14,11 @@ class Window(pg.window.Window):
         pg.gl.gluPerspective(45.0, self.width/self.height, 1.0, 1000.0)
         pg.gl.glMatrixMode(pg.gl.GL_MODELVIEW)
         pg.gl.glLoadIdentity()
-        self.card = Card2(0, 0)
+
+        #drawing
+        self.card = Card(0, 0, self.width)
+        self.card.back.colors = [0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0]
+        #self.card.rotation = 180.0
 
     def on_resize(self, width, height):
         pg.gl.glViewport(0, 0, width, height)

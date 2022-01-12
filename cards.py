@@ -66,49 +66,49 @@ class Card:
         edge *= 4
         z = [0.0, self.depth]
         for zi in z:
-            vertex = [0.0, self.radius, zi,
-                    0.0, self.height-self.radius, zi,
-                    2*self.radius, self.height-self.radius, zi,
-                    2*self.radius, self.radius, zi]
+            vertex = [-self.width/2, -self.height/2+self.radius, zi,
+                    -self.width/2, self.height/2-self.radius, zi,
+                    -self.width/2+2*self.radius, self.height/2-self.radius, zi,
+                    -self.width/2+2*self.radius, -self.height/2+self.radius, zi]
             self.batch.add(4, GL_QUADS, self.edges, ('v3f', vertex), ('c3f', front))
-            vertex = [self.radius, self.height, zi,
-                    self.width-self.radius, self.height, zi,
-                    self.width-self.radius, self.height-2*self.radius, zi,
-                    self.radius, self.height-2*self.radius, zi]
+            vertex = [-self.width/2+self.radius, self.height/2-2*self.radius, zi,
+                    -self.width/2+self.radius, self.height/2, zi,
+                    self.width/2-self.radius, self.height/2, zi,
+                    self.width/2-self.radius, self.height/2-2*self.radius, zi]
             self.batch.add(4, GL_QUADS, self.edges, ('v3f', vertex), ('c3f', front))
-            vertex = [self.width-2*self.radius, self.height-self.radius, zi,
-                    self.width, self.height-self.radius, zi,
-                    self.width, self.radius, zi,
-                    self.width-2*self.radius, self.radius, zi]
+            vertex = [self.width/2-2*self.radius, self.height/2-self.radius, zi,
+                    self.width/2, self.height/2-self.radius, zi,
+                    self.width/2, -self.height/2+self.radius, zi,
+                    self.width/2-2*self.radius, -self.height/2+self.radius, zi]
             self.batch.add(4, GL_QUADS, self.edges, ('v3f', vertex), ('c3f', front))
-            vertex = [self.radius, 0.0, zi,
-                    self.radius, 2*self.radius, zi,
-                    self.width-self.radius, 2*self.radius, zi,
-                    self.width-self.radius, 0.0, zi]
+            vertex = [-self.width/2+self.radius, -self.height/2+2*self.radius, zi,
+                    self.width/2-self.radius, -self.height/2+2*self.radius, zi,
+                    self.width/2-self.radius, -self.height/2, zi,
+                    -self.width/2+self.radius, -self.height/2, zi]
             self.batch.add(4, GL_QUADS, self.edges, ('v3f', vertex), ('c3f', front))
-            vertex = [self.radius, 0.0, 0.0,
-                    self.width-self.radius, 0.0, 0.0,
-                    self.width-self.radius, 0.0, self.depth,
-                    self.radius, 0.0, self.depth]
-            self.batch.add(4, GL_QUADS, self.edges, ('v3f', vertex), ('c3f', edge))
-            vertex = [0.0, self.radius, 0.0,
-                    0.0, self.height-self.radius, 0.0,
-                    0.0, self.height-self.radius, self.depth,
-                    0.0, self.radius, self.depth]
-            self.batch.add(4, GL_QUADS, self.edges, ('v3f', vertex), ('c3f', edge))
-            vertex = [self.radius, self.height, 0.0,
-                    self.width-self.radius, self.height, 0.0,
-                    self.width-self.radius, self.height, self.depth,
-                    self.radius, self.height, self.depth]
-            self.batch.add(4, GL_QUADS, self.edges, ('v3f', vertex), ('c3f', edge))
-            vertex = [self.width, self.radius, 0.0,
-                    self.width, self.height-self.radius, 0.0,
-                    self.width, self.height-self.radius, self.depth,
-                    self.width, self.radius, self.depth]
-            self.batch.add(4, GL_QUADS, self.edges, ('v3f', vertex), ('c3f', edge))
+            vertex = [-self.width/2, -self.height/2+self.radius, zi,
+                    -self.width/2, self.height/2-self.radius, zi,
+                    -self.width/2+2*self.radius, self.height/2-self.radius, zi,
+                    -self.width/2+2*self.radius, -self.height/2+self.radius, zi]
+            self.batch.add(4, GL_QUADS, self.edges, ('v3f', vertex), ('c3f', front))
+            vertex = [-self.width/2+self.radius, self.height/2-2*self.radius, zi,
+                    -self.width/2+self.radius, self.height/2, zi,
+                    self.width/2-self.radius, self.height/2, zi,
+                    self.width/2-self.radius, self.height/2-2*self.radius, zi]
+            self.batch.add(4, GL_QUADS, self.edges, ('v3f', vertex), ('c3f', front))
+            vertex = [self.width/2-2*self.radius, self.height/2-self.radius, zi,
+                    self.width/2, self.height/2-self.radius, zi,
+                    self.width/2, -self.height/2+self.radius, zi,
+                    self.width/2-2*self.radius, -self.height/2+self.radius, zi]
+            self.batch.add(4, GL_QUADS, self.edges, ('v3f', vertex), ('c3f', front))
+            vertex = [-self.width/2+self.radius, -self.height/2+2*self.radius, zi,
+                    self.width/2-self.radius, -self.height/2+2*self.radius, zi,
+                    self.width/2-self.radius, -self.height/2, zi,
+                    -self.width/2+self.radius, -self.height/2, zi]
+            self.batch.add(4, GL_QUADS, self.edges, ('v3f', vertex), ('c3f', front))
     def DrawCylinders(self):
         glPushMatrix()
-        glTranslatef(self.radius, self.radius, 0.0)
+        glTranslatef(-self.width/2+self.radius, -self.height/2+self.radius, 0.0)
         self.cylinder.draw()
         glTranslatef(0.0, self.height-2*self.radius, 0.0)
         self.cylinder.draw()
@@ -118,19 +118,21 @@ class Card:
         self.cylinder.draw()
         glPopMatrix()
     def createField(self, depth):
-        vertex = [self.radius, self.radius, depth,
-                self.radius, self.height-self.radius, depth,
-                self.width-self.radius, self.height-self.radius, depth,
-                self.width-self.radius, self.radius, depth]
+        vertex = [-self.width/2+self.radius, -self.height/2+self.radius, depth,
+                -self.width/2+self.radius, self.height/2-self.radius, depth,
+                self.width/2-self.radius, self.height/2-self.radius, depth,
+                self.width/2-self.radius, -self.height/2+self.radius, depth]
         color = [1.0, 0.0, 0.0] * 4
         return vertex_list(4, ('v3f', vertex), ('c3f', color))
-    def __init__(self, x, y):
+    def __init__(self, x, y, width):
         self.batch = Batch()
-        self.radius = 5.0
-        self.depth = -1.0
-        self.width = 100.0
-        self.height = 200.0
+        self.depth = -10.0
         self.edges = Group()
+        self.width = 100
+        self.height = 150
+        self.radius = 5
+        self.rotation = 0.0
+
         self.x = x
         self.y = y
 
@@ -143,8 +145,13 @@ class Card:
     def draw(self):
         glPushMatrix()
         glTranslatef(self.x, self.y, 0)
+        glRotatef(self.rotation, 0, 1, 0)
         self.batch.draw()
         self.DrawCylinders()
         self.front.draw(GL_QUADS)
         self.back.draw(GL_QUADS)
         glPopMatrix()
+class Player:
+        def __init__(self, playable):
+                self.playable = playable
+
