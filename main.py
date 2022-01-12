@@ -16,8 +16,8 @@ class Player:
         self.cards = []
         if(position == 0 or position == 2):
             self.maxSize = xRadius - 168.0
-        else:
-            self.maxSize = yRadius - 20.0
+        elif(position == 1 or position == 3):
+            self.maxSize = yRadius - 107.0
     def addCards(self, count):
         for x in range(count):
             self.cards.append(Card())
@@ -50,6 +50,11 @@ class Player:
             if (self.position == 2):
                 pg.graphics.glRotatef(180, 0, 0, 1)
             pg.graphics.glTranslatef(0.0, -yRadius + cardHeight/2 + 20, 0.0)
+        elif(self.position == 1 or self.position == 3):
+            pg.graphics.glRotatef(-90, 0, 0, 1)
+            if(self.position == 3):
+                pg.graphics.glRotatef(180, 0, 0, 1)
+            pg.graphics.glTranslatef(0.0, -xRadius + cardHeight/2 + 20, 0.0)
         for card in self.cards:
             card.draw()
         pg.graphics.glPopMatrix()
@@ -63,12 +68,16 @@ class Window(pg.window.Window):
         pg.gl.glMatrixMode(pg.gl.GL_MODELVIEW)
         pg.gl.glLoadIdentity()
 
-        self.player = Player(0, True, self)
+        self.player1 = Player(0, True, self)
+        self.player2 = Player(1, False, self)
         self.player3 = Player(2, False, self)
-        self.player.addCards(11)
-        self.player3.addCards(5)
+        self.player4 = Player(3, False, self)
+        self.player1.addCards(11)
+        self.player2.addCards(5)
+        self.player3.addCards(7)
+        self.player4.addCards(3)
 
-        self.player.cards[0].selected = True
+        self.player1.cards[5].selected = True
 
     def on_resize(self, width, height):
         pg.gl.glViewport(0, 0, width, height)
@@ -79,8 +88,10 @@ class Window(pg.window.Window):
         pg.graphics.glRotatef(rotOX, 1, 0, 0)
         pg.graphics.glRotatef(rotOY, 0, 1, 0)
         #drawing models
-        self.player.draw()
+        self.player1.draw()
+        self.player2.draw()
         self.player3.draw()
+        self.player4.draw()
         #self.quad.draw(pg.graphics.GL_QUADS)
         pg.graphics.glPopMatrix()
         
