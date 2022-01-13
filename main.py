@@ -77,7 +77,14 @@ class Player:
             lewo *= -1
 
         def sorting(e):
-            return e.x
+            if(self.position == 0):
+                return e.x
+            elif(self.position == 1):
+                return -e.y
+            elif(self.position == 2):
+                return -e.x
+            elif(self.position == 3):
+                return e.y
         self.cards.sort(key=sorting)
         for x in range(len(self.cards)):
             self.cards[x].setOrder(x)
