@@ -60,12 +60,13 @@ class Player:
         lewo = 1
         counter = 0
         for card in self.cards:
-                    card.x = lewo * (parzyste + counter * (cardWidth + 10) )
-                    if (lewo == 1 and parzyste == 0.0):
-                        counter += 1
-                    elif (lewo != 1 and parzyste != 0.0):
-                        counter += 1
-                    lewo *= -1
+            card.x = lewo * (parzyste + counter * (cardWidth + 10) )
+            if (lewo == 1 and parzyste == 0.0):
+                counter += 1
+            elif (lewo != 1 and parzyste != 0.0):
+                counter += 1
+            lewo *= -1
+
         def sorting(e):
             return e.x
         self.cards.sort(key=sorting)
@@ -73,13 +74,14 @@ class Player:
             self.cards[x].setOrder(x)
             if (self.cards[len(self.cards)-1].x > self.maxSize):
                 self.cards[x].x *= self.maxSize/self.cards[len(self.cards)-1].x
+            if(self.position == 0 or self.position == 2):
+                self.cards[x].y = -yRadius + cardHeight/2 + 20
             self.cards[x].moving = True
     def draw(self):
         pg.graphics.glPushMatrix()
         if(self.position == 0 or self.position == 2):
             if (self.position == 2):
                 pg.graphics.glRotatef(180, 0, 0, 1)
-            pg.graphics.glTranslatef(0.0, -yRadius + cardHeight/2 + 20, 0.0)
         elif(self.position == 1 or self.position == 3):
             pg.graphics.glRotatef(-90, 0, 0, 1)
             if(self.position == 3):
