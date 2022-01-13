@@ -77,19 +77,16 @@ class Player:
             lewo *= -1
 
         def sorting(e):
-            if(self.position == 0):
+            if(self.position % 2 == 0):
                 return e.x
-            elif(self.position == 1):
-                return -e.y
-            elif(self.position == 2):
-                return -e.x
-            elif(self.position == 3):
+            elif(self.position % 2 == 1):
                 return e.y
         self.cards.sort(key=sorting)
         for x in range(len(self.cards)):
             self.cards[x].setOrder(x)
-            if (self.cards[len(self.cards)-1].x > self.maxSize):
-                self.cards[x].x *= self.maxSize/self.cards[len(self.cards)-1].x
+            if(self.position == 0 or self.position == 2):
+                if (self.cards[len(self.cards)-1].x > self.maxSize):
+                    self.cards[x].x *= self.maxSize/self.cards[len(self.cards)-1].x
             if(self.position == 0):
                 self.cards[x].y = -yRadius + cardHeight/2 + 20
             elif(self.position == 2):
@@ -100,6 +97,7 @@ class Player:
         #if(self.position == 0 or self.position == 2):
         #    if (self.position == 2):
         #        pg.graphics.glRotatef(180, 0, 0, 1)
+        self.cards[0].selected = True
         if(self.position == 1 or self.position == 3):
             pg.graphics.glRotatef(-90, 0, 0, 1)
             if(self.position == 3):
@@ -127,7 +125,7 @@ class Window(pg.window.Window):
         self.player4 = Player(3, False, self)
         self.player1.addCards(3)
         self.player2.addCards(5)
-        self.player3.addCards(7)
+        self.player3.addCards(11)
         self.player4.addCards(3)
 
     def on_resize(self, width, height):
