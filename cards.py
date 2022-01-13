@@ -186,7 +186,7 @@ class Card:
         self.edges = Group()
         self.moving = False
         self.moving_speed = 5.0
-        self.rotating_speed = 10.0
+        self.rotating_speed = 5.0
 
         self.yRot = 0.0
         self.pyRot = 0.0
@@ -231,6 +231,26 @@ class Card:
             else:
                 self.py -= self.moving_speed
 
+        def sub_rot(prot, rot):
+            if(prot > rot):
+                a = prot - rot
+                b = rot + 360.0 - prot
+                if(abs(a - b) < self.rotating_speed):
+                    return rot
+                elif(a > b):
+                    prot-self.rotating_speed
+                else:
+                    prot+self.rotating_speed
+            else:
+                a = rot - prot
+                b = prot + 360.0 - rot
+                if(abs(a - b) < self.rotating_speed):
+                    prot = rot
+                elif(a > b):
+                    prot+self.rotating_speed
+                else:
+                    prot-self.rotating_speed
+
         #rotating Y
         if(self.pyRot == self.yRot):
             self.pyRot = self.yRot
@@ -245,13 +265,9 @@ class Card:
         #rotating Z
         if(self.pzRot == self.zRot):
             self.pzRot = self.zRot
-        elif(abs(self.pzRot - self.zRot) < self.rotating_speed):
-            self.pzRot = self.zRot
         else:
-            if(self.pzRot < self.zRot):
-                self.pzRot += self.rotating_speed
-            else:
-                self.pzRot -= self.rotating_speed
+            #sub_rot(self.pzRot, self.zRot)
+            self.pzRot = (self.pzRot + (self.zRot - self.pzRot) / self.rotating_speed) % 360.0
 
         if(self.py == self.y and self.px == self.x and self.pyRot == self.yRot and self.pzRot == self.zRot):
             self.moving = False
