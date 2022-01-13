@@ -18,11 +18,28 @@ class Player:
             self.maxSize = xRadius - 168.0
         elif(position == 1 or position == 3):
             self.maxSize = yRadius - 107.0
+    def select(self, dt, keys):
+        if(keys[pg.window.key.A]):
+            if(self.selectedIndex > 0):
+                self.cards[self.selectedIndex].selected = False
+                self.selectedIndex -= 1
+                self.cards[self.selectedIndex].selected = True
+        elif(keys[pg.window.key.D]):
+            if(self.selectedIndex < len(self.cards) - 1):
+                self.cards[self.selectedIndex].selected = False
+                self.selectedIndex += 1
+                self.cards[self.selectedIndex].selected = True
     def addCards(self, count):
+        self.selectedIndex = 0
         for x in range(count):
-            self.cards.append(Card())
+            self.cards.append(Card('test'))
         self.positionCards()
+        if(self.playable):
+            self.cards[self.selectedIndex].selected = True
     def positionCards(self):
+        if(self.playable == False):
+            for card in self.cards:
+                card.rotation = 180.0
         if (len(self.cards)%2 == 0):
             parzyste = cardWidth/2+5
         else:
@@ -62,6 +79,9 @@ class Window(pg.window.Window):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.set_minimum_size(300, 200)
+        self.keys = pg.window.key.KeyStateHandler()
+        self.push_handlers(self.keys)
+        pg.clock.schedule_interval(self.update, 1/60.0)
         pg.gl.glMatrixMode(pg.gl.GL_PROJECTION)
         pg.gl.glLoadIdentity()
         pg.gl.gluPerspective(45.0, self.width/self.height, 1.0, 1000.0)
@@ -76,8 +96,6 @@ class Window(pg.window.Window):
         self.player2.addCards(5)
         self.player3.addCards(7)
         self.player4.addCards(3)
-
-        self.player1.cards[5].selected = True
 
     def on_resize(self, width, height):
         pg.gl.glViewport(0, 0, width, height)
@@ -94,7 +112,8 @@ class Window(pg.window.Window):
         self.player4.draw()
         #self.quad.draw(pg.graphics.GL_QUADS)
         pg.graphics.glPopMatrix()
-        
+    def update(self, dt):
+        self.player1.select(dt, self.keys)
 
 if __name__ == '__main__':
     config = pg.gl.Config(sample_buffers=1, samples=4)

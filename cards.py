@@ -1,4 +1,5 @@
 from pyglet.graphics import *
+from pyglet import image
 import math
 cardWidth = 60
 cardHeight = 90
@@ -144,26 +145,48 @@ class Card:
         glTranslatef(0.0, -cardHeight+2*cardRadius, 0.0)
         self.cylinder.draw()
         glPopMatrix()
-    def createField(self, depth):
+    def createField(self, side):
+        if(side == 'front'):
+            depth = 0.1
+            group = self.front_tex
+        else:
+            depth = self.depth-0.1
+            group = self.back_tex
+        batch = Batch()
         vertex = [-cardWidth/2+cardRadius, -cardHeight/2+cardRadius, depth,
                 -cardWidth/2+cardRadius, cardHeight/2-cardRadius, depth,
                 cardWidth/2-cardRadius, cardHeight/2-cardRadius, depth,
                 cardWidth/2-cardRadius, -cardHeight/2+cardRadius, depth]
         color = [1.0, 0.0, 0.0] * 4
-        return vertex_list(4, ('v3f', vertex), ('c3f', color))
-    def __init__(self):
+        tex_coords = [0.0,0.0, 0.0,0.575, 0.8,0.575, 0.8,0.0]
+        batch.add(4, GL_QUADS, group, ('v3f', vertex), ('t2f', tex_coords))
+        return batch
+        #return vertex_list(4, ('v3f', vertex), ('c3f', color), ('t2f', tex_coords))
+    def get_tex(self, file):
+        tex = image.load(file).get_texture()
+        glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR)
+        glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR)
+        return TextureGroup(tex)
+    def assign_texture(self):
+        self.back_tex = self.get_tex('cardTextures/back.png')
+        if(self.name == 'test'):
+            self.front_tex = self.get_tex('cardTextures/colorChange.png')
+
+    def __init__(self, name):
         self.batch = Batch()
         self.depth = -2.0
         self.edges = Group()
         self.rotation = 0.0
         self.x = 0
+        self.name = name
 
         #declare elements
         self.selected = False
         self.cylinder = Cylinder(cardRadius, self.depth, [1.0, 1.0, 1.0], [0.0, 0.0, 0.0])
         self.CreateEdges([1.0, 1.0, 1.0], [0.0, 0.0, 0.0])
-        self.front = self.createField(0.1)
-        self.back = self.createField(self.depth-0.1)
+        self.assign_texture()
+        self.front = self.createField('front')
+        self.back = self.createField('back')
     def setOrder(self, number):
         self.depth += number*0.2
     def draw(self):
@@ -178,6 +201,6 @@ class Card:
                 glScalef(1.25, 1.25, 1.25)
         self.batch.draw()
         self.DrawCylinders()
-        self.front.draw(GL_QUADS)
-        self.back.draw(GL_QUADS)
+        self.front.draw()
+        self.back.draw()
         glPopMatrix()
