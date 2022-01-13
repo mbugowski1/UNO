@@ -45,7 +45,16 @@ class Player:
     def addCards(self, count):
         self.selectedIndex = 0
         for x in range(count):
-            self.cards.append(Card('stop', None))
+            card = Card('stop', None)
+            if(self.position == 0):
+                card.pzRot = 0.0
+            elif(self.position == 1):
+                card.pzRot = 90.0
+            elif(self.position == 2):
+                card.pzRot = 180.0
+            elif(self.position == 3):
+                card.pzRot = 270.0
+            self.cards.append(card)
         self.positionCards()
         if(self.playable):
             self.cards[self.selectedIndex].selected = True

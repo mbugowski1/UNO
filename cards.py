@@ -193,6 +193,8 @@ class Card:
         self.color = color
         self.moving = False
         self.moving_speed = 5.0
+        self.zRot = 0
+        self.pzRot = 0
 
         #declare elements
         self.selected = False
@@ -236,6 +238,7 @@ class Card:
         glPushMatrix()
         glTranslatef(self.px, self.py, self.depth + add)
         glRotatef(self.rotation, 0, 1, 0)
+        glRotatef(self.pzRot, 0, 0, 1)
         if (self.selected):
                 glScalef(1.25, 1.25, 1.25)
         self.batch.draw()
