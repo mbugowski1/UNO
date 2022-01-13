@@ -18,6 +18,12 @@ class Player:
             self.maxSize = xRadius - 168.0
         elif(position == 1 or position == 3):
             self.maxSize = yRadius - 107.0
+    def update(self, dt, keys):
+        if(self.playable):
+            self.select(dt, keys)
+        for card in self.cards:
+            if(card.moving):
+                card.move()
     def select(self, dt, keys):
         if(keys[pg.window.key.A]):
             if(self.selectedIndex > 0):
@@ -32,7 +38,7 @@ class Player:
     def addCards(self, count):
         self.selectedIndex = 0
         for x in range(count):
-            self.cards.append(Card('test'))
+            self.cards.append(Card('8', 'blue'))
         self.positionCards()
         if(self.playable):
             self.cards[self.selectedIndex].selected = True
@@ -56,11 +62,11 @@ class Player:
         def sorting(e):
             return e.x
         self.cards.sort(key=sorting)
-        print(self.cards[len(self.cards)-1].x)
         for x in range(len(self.cards)):
             self.cards[x].setOrder(x)
             if (self.cards[len(self.cards)-1].x > self.maxSize):
                 self.cards[x].x *= self.maxSize/self.cards[len(self.cards)-1].x
+            self.cards[x].moving = True
     def draw(self):
         pg.graphics.glPushMatrix()
         if(self.position == 0 or self.position == 2):
@@ -113,7 +119,10 @@ class Window(pg.window.Window):
         #self.quad.draw(pg.graphics.GL_QUADS)
         pg.graphics.glPopMatrix()
     def update(self, dt):
-        self.player1.select(dt, self.keys)
+        self.player1.update(dt, self.keys)
+        self.player2.update(dt, self.keys)
+        self.player3.update(dt, self.keys)
+        self.player4.update(dt, self.keys)
 
 if __name__ == '__main__':
     config = pg.gl.Config(sample_buffers=1, samples=4)
