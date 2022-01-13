@@ -73,7 +73,10 @@ class Player:
         lewo = 1
         counter = 0
         for card in self.cards:
-            card.x = lewo * (parzyste + counter * (cardWidth + 10) )
+            if(horizontal):
+                card.x = lewo * (parzyste + counter * (cardWidth + 10) )
+            else:
+                card.y = lewo * (parzyste + counter * (cardWidth + 10) )
             if (lewo == 1 and parzyste == 0.0):
                 counter += 1
             elif (lewo != 1 and parzyste != 0.0):
@@ -97,6 +100,8 @@ class Player:
                 self.cards[x].y = (-yRadius + cardHeight/2 + 20) * -1
             elif(self.position == 1):
                 self.cards[x].x = -xRadius + cardHeight/2 + 20
+            elif(self.position == 3):
+                self.cards[x].x = (-xRadius + cardHeight/2 + 20) * -1
             self.cards[x].moving = True
     def draw(self):
         pg.graphics.glPushMatrix()
