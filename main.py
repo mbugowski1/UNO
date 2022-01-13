@@ -66,6 +66,10 @@ class Player:
             parzyste = cardWidth/2+5
         else:
             parzyste = 0.0
+        if(self.position % 2 == 0):
+            horizontal = True
+        else:
+            horizontal = False
         lewo = 1
         counter = 0
         for card in self.cards:
@@ -77,20 +81,22 @@ class Player:
             lewo *= -1
 
         def sorting(e):
-            if(self.position % 2 == 0):
+            if(horizontal):
                 return e.x
-            elif(self.position % 2 == 1):
+            else:
                 return e.y
         self.cards.sort(key=sorting)
         for x in range(len(self.cards)):
             self.cards[x].setOrder(x)
-            if(self.position == 0 or self.position == 2):
+            if(horizontal):
                 if (self.cards[len(self.cards)-1].x > self.maxSize):
                     self.cards[x].x *= self.maxSize/self.cards[len(self.cards)-1].x
             if(self.position == 0):
                 self.cards[x].y = -yRadius + cardHeight/2 + 20
             elif(self.position == 2):
                 self.cards[x].y = (-yRadius + cardHeight/2 + 20) * -1
+            elif(self.position == 1):
+                self.cards[x].x = -xRadius + cardHeight/2 + 20
             self.cards[x].moving = True
     def draw(self):
         pg.graphics.glPushMatrix()
@@ -98,11 +104,11 @@ class Player:
         #    if (self.position == 2):
         #        pg.graphics.glRotatef(180, 0, 0, 1)
         self.cards[0].selected = True
-        if(self.position == 1 or self.position == 3):
-            pg.graphics.glRotatef(-90, 0, 0, 1)
-            if(self.position == 3):
-                pg.graphics.glRotatef(180, 0, 0, 1)
-            pg.graphics.glTranslatef(0.0, -xRadius + cardHeight/2 + 20, 0.0)
+        #if(self.position == 1 or self.position == 3):
+            #pg.graphics.glRotatef(-90, 0, 0, 1)
+            #if(self.position == 3):
+            #    pg.graphics.glRotatef(180, 0, 0, 1)
+            #pg.graphics.glTranslatef(0.0, -xRadius + cardHeight/2 + 20, 0.0)
         for card in self.cards:
             card.draw()
         pg.graphics.glPopMatrix()
