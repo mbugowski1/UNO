@@ -14,6 +14,7 @@ class Player:
         self.playable = playable
         self.window = window
         self.cards = []
+        self.button_pressed = False
         if(position == 0 or position == 2):
             self.maxSize = xRadius - 168.0
         elif(position == 1 or position == 3):
@@ -25,20 +26,26 @@ class Player:
             if(card.moving):
                 card.move()
     def select(self, dt, keys):
-        if(keys[pg.window.key.A]):
-            if(self.selectedIndex > 0):
-                self.cards[self.selectedIndex].selected = False
-                self.selectedIndex -= 1
-                self.cards[self.selectedIndex].selected = True
-        elif(keys[pg.window.key.D]):
-            if(self.selectedIndex < len(self.cards) - 1):
-                self.cards[self.selectedIndex].selected = False
-                self.selectedIndex += 1
-                self.cards[self.selectedIndex].selected = True
+        if(self.button_pressed == False):
+            if(keys[pg.window.key.A]):
+                if(self.selectedIndex > 0):
+                    self.cards[self.selectedIndex].selected = False
+                    self.selectedIndex -= 1
+                    self.cards[self.selectedIndex].selected = True
+                    self.button_pressed = True
+            elif(keys[pg.window.key.D]):
+                if(self.selectedIndex < len(self.cards) - 1):
+                    self.cards[self.selectedIndex].selected = False
+                    self.selectedIndex += 1
+                    self.cards[self.selectedIndex].selected = True
+                    self.button_pressed = True
+        else:
+            if(keys[pg.window.key.A] == False and keys[pg.window.key.D] == False):
+                self.button_pressed = False
     def addCards(self, count):
         self.selectedIndex = 0
         for x in range(count):
-            self.cards.append(Card('8', 'blue'))
+            self.cards.append(Card('stop', None))
         self.positionCards()
         if(self.playable):
             self.cards[self.selectedIndex].selected = True
@@ -98,7 +105,7 @@ class Window(pg.window.Window):
         self.player2 = Player(1, False, self)
         self.player3 = Player(2, False, self)
         self.player4 = Player(3, False, self)
-        self.player1.addCards(11)
+        self.player1.addCards(3)
         self.player2.addCards(5)
         self.player3.addCards(7)
         self.player4.addCards(3)
@@ -116,13 +123,13 @@ class Window(pg.window.Window):
         self.player2.draw()
         self.player3.draw()
         self.player4.draw()
-        #self.quad.draw(pg.graphics.GL_QUADS)
         pg.graphics.glPopMatrix()
     def update(self, dt):
         self.player1.update(dt, self.keys)
         self.player2.update(dt, self.keys)
         self.player3.update(dt, self.keys)
         self.player4.update(dt, self.keys)
+        print(pg.clock.get_fps())
 
 if __name__ == '__main__':
     config = pg.gl.Config(sample_buffers=1, samples=4)
