@@ -90,15 +90,17 @@ class Player:
             self.cards[x].setOrder(x)
             if (self.cards[len(self.cards)-1].x > self.maxSize):
                 self.cards[x].x *= self.maxSize/self.cards[len(self.cards)-1].x
-            if(self.position == 0 or self.position == 2):
+            if(self.position == 0):
                 self.cards[x].y = -yRadius + cardHeight/2 + 20
+            elif(self.position == 2):
+                self.cards[x].y = (-yRadius + cardHeight/2 + 20) * -1
             self.cards[x].moving = True
     def draw(self):
         pg.graphics.glPushMatrix()
-        if(self.position == 0 or self.position == 2):
-            if (self.position == 2):
-                pg.graphics.glRotatef(180, 0, 0, 1)
-        elif(self.position == 1 or self.position == 3):
+        #if(self.position == 0 or self.position == 2):
+        #    if (self.position == 2):
+        #        pg.graphics.glRotatef(180, 0, 0, 1)
+        if(self.position == 1 or self.position == 3):
             pg.graphics.glRotatef(-90, 0, 0, 1)
             if(self.position == 3):
                 pg.graphics.glRotatef(180, 0, 0, 1)
