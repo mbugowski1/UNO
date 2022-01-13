@@ -168,17 +168,31 @@ class Card:
         glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR)
         return TextureGroup(tex)
     def assign_texture(self):
+        if (self.color == None):
+            self.color = ''
         self.back_tex = self.get_tex('cardTextures/back.png')
-        if(self.name == 'test'):
-            self.front_tex = self.get_tex('cardTextures/colorChange.png')
+        loc = 'cardTextures/'
+        self.front_tex = self.get_tex(loc + self.name + self.color + '.png')
+        #if(self.name == 'colorChange'):
+        #    self.front_tex = self.get_tex('cardTextures/colorChange.png')
+        #elif(self.name == 'stop'):
+        #    self.front_tex = self.get_tex(loc + 'stop.png')
+        #else:
+        #    self.front_tex = self.get_tex(loc + self.name + self.color + '.png')
 
-    def __init__(self, name):
+    def __init__(self, name, color):
         self.batch = Batch()
         self.depth = -2.0
         self.edges = Group()
         self.rotation = 0.0
         self.x = 0
+        self.px = 0
+        self.y = 0
+        self.py = 0
         self.name = name
+        self.color = color
+        self.moving = False
+        self.moving_speed = 5.0
 
         #declare elements
         self.selected = False
@@ -189,13 +203,38 @@ class Card:
         self.back = self.createField('back')
     def setOrder(self, number):
         self.depth += number*0.2
+    def move(self):
+        #moving X
+        if(self.px == self.x):
+            self.px = self.x
+        elif(abs(self.px - self.x) < self.moving_speed):
+            self.px = self.x
+        else:
+            if(self.px < self.x):
+                self.px += self.moving_speed
+            else:
+                self.px -= self.moving_speed
+
+        #moving Y
+        if(self.py == self.y):
+            self.py = self.y
+        elif(abs(self.py - self.y) < self.moving_speed):
+            self.py = self.y
+        else:
+            if(self.py < self.y):
+                self.py += self.moving_speed
+            else:
+                self.py -= self.moving_speed
+
+        if(self.py == self.y and self.px == self.x):
+            self.moving = False
     def draw(self):
         if (self.selected):
             add = 20.0
         else:
             add = 0.0
         glPushMatrix()
-        glTranslatef(self.x,0.0, self.depth + add)
+        glTranslatef(self.px,0.0, self.depth + add)
         glRotatef(self.rotation, 0, 1, 0)
         if (self.selected):
                 glScalef(1.25, 1.25, 1.25)
