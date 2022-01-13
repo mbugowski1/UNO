@@ -186,6 +186,7 @@ class Card:
         self.edges = Group()
         self.moving = False
         self.moving_speed = 5.0
+        self.rotating_speed = 10.0
         self.yRot = 0.0
         self.pyRot = 0.0
         self.x = 0
@@ -229,8 +230,20 @@ class Card:
             else:
                 self.py -= self.moving_speed
 
-        if(self.py == self.y and self.px == self.x):
+        #rotating Y
+        if(self.pyRot == self.yRot):
+            self.pyRot = self.yRot
+        elif(abs(self.pyRot - self.yRot) < self.rotating_speed):
+            self.pyRot = self.yRot
+        else:
+            if(self.pyRot < self.yRot):
+                self.pyRot += self.rotating_speed
+            else:
+                self.pyRot -= self.rotating_speed
+
+        if(self.py == self.y and self.px == self.x and self.pyRot == self.yRot):
             self.moving = False
+
     def draw(self):
         if (self.selected):
             add = 20.0
@@ -239,7 +252,7 @@ class Card:
         glPushMatrix()
         glTranslatef(self.px, self.py, self.depth + add)
         glRotatef(180.0, 0, 1, 0)
-        glRotatef(self.yRot, 0, 1, 0)
+        glRotatef(self.pyRot, 0, 1, 0)
         glRotatef(self.pzRot, 0, 0, 1)
         if (self.selected):
                 glScalef(1.25, 1.25, 1.25)
