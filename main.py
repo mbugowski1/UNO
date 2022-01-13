@@ -61,7 +61,7 @@ class Player:
     def positionCards(self):
         if(self.playable):
             for card in self.cards:
-                card.rotation = 180.0
+                card.yRot = 180.0
         if (len(self.cards)%2 == 0):
             parzyste = cardWidth/2+5
         else:

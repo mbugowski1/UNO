@@ -184,17 +184,18 @@ class Card:
         self.batch = Batch()
         self.depth = -2.0
         self.edges = Group()
-        self.rotation = 0.0
+        self.moving = False
+        self.moving_speed = 5.0
+        self.yRot = 0.0
+        self.pyRot = 0.0
         self.x = 0
         self.px = 0
         self.y = 0
         self.py = 0
-        self.name = name
-        self.color = color
-        self.moving = False
-        self.moving_speed = 5.0
         self.zRot = 0
         self.pzRot = 0
+        self.name = name
+        self.color = color
 
         #declare elements
         self.selected = False
@@ -238,7 +239,7 @@ class Card:
         glPushMatrix()
         glTranslatef(self.px, self.py, self.depth + add)
         glRotatef(180.0, 0, 1, 0)
-        glRotatef(self.rotation, 0, 1, 0)
+        glRotatef(self.yRot, 0, 1, 0)
         glRotatef(self.pzRot, 0, 0, 1)
         if (self.selected):
                 glScalef(1.25, 1.25, 1.25)
