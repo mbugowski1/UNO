@@ -234,7 +234,7 @@ class Card:
         else:
             add = 0.0
         glPushMatrix()
-        glTranslatef(self.px,0.0, self.depth + add)
+        glTranslatef(self.px, self.py, self.depth + add)
         glRotatef(self.rotation, 0, 1, 0)
         if (self.selected):
                 glScalef(1.25, 1.25, 1.25)
