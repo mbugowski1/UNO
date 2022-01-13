@@ -47,21 +47,20 @@ class Player:
         for x in range(count):
             card = Card('stop', None)
             if(self.position == 0):
-                card.pzRot = 0.0
+                card.zRot = 0.0
             elif(self.position == 1):
-                card.pzRot = 90.0
+                card.zRot = 90.0
             elif(self.position == 2):
-                card.pzRot = 180.0
+                card.zRot = 180.0
             elif(self.position == 3):
-                card.pzRot = 270.0
+                card.zRot = 270.0
+            if(self.playable):
+                card.yRot = 180.0
             self.cards.append(card)
         self.positionCards()
         if(self.playable):
             self.cards[self.selectedIndex].selected = True
     def positionCards(self):
-        if(self.playable):
-            for card in self.cards:
-                card.yRot = 180.0
         if (len(self.cards)%2 == 0):
             parzyste = cardWidth/2+5
         else:

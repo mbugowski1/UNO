@@ -187,6 +187,7 @@ class Card:
         self.moving = False
         self.moving_speed = 5.0
         self.rotating_speed = 10.0
+
         self.yRot = 0.0
         self.pyRot = 0.0
         self.x = 0
@@ -241,7 +242,18 @@ class Card:
             else:
                 self.pyRot -= self.rotating_speed
 
-        if(self.py == self.y and self.px == self.x and self.pyRot == self.yRot):
+        #rotating Z
+        if(self.pzRot == self.zRot):
+            self.pzRot = self.zRot
+        elif(abs(self.pzRot - self.zRot) < self.rotating_speed):
+            self.pzRot = self.zRot
+        else:
+            if(self.pzRot < self.zRot):
+                self.pzRot += self.rotating_speed
+            else:
+                self.pzRot -= self.rotating_speed
+
+        if(self.py == self.y and self.px == self.x and self.pyRot == self.yRot and self.pzRot == self.zRot):
             self.moving = False
 
     def draw(self):
