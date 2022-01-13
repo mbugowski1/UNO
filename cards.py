@@ -237,6 +237,7 @@ class Card:
             add = 0.0
         glPushMatrix()
         glTranslatef(self.px, self.py, self.depth + add)
+        glRotatef(180.0, 0, 1, 0)
         glRotatef(self.rotation, 0, 1, 0)
         glRotatef(self.pzRot, 0, 0, 1)
         if (self.selected):

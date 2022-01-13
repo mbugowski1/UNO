@@ -59,7 +59,7 @@ class Player:
         if(self.playable):
             self.cards[self.selectedIndex].selected = True
     def positionCards(self):
-        if(self.playable == False):
+        if(self.playable):
             for card in self.cards:
                 card.rotation = 180.0
         if (len(self.cards)%2 == 0):
@@ -105,15 +105,6 @@ class Player:
             self.cards[x].moving = True
     def draw(self):
         pg.graphics.glPushMatrix()
-        #if(self.position == 0 or self.position == 2):
-        #    if (self.position == 2):
-        #        pg.graphics.glRotatef(180, 0, 0, 1)
-        self.cards[0].selected = True
-        #if(self.position == 1 or self.position == 3):
-            #pg.graphics.glRotatef(-90, 0, 0, 1)
-            #if(self.position == 3):
-            #    pg.graphics.glRotatef(180, 0, 0, 1)
-            #pg.graphics.glTranslatef(0.0, -xRadius + cardHeight/2 + 20, 0.0)
         for card in self.cards:
             card.draw()
         pg.graphics.glPopMatrix()
