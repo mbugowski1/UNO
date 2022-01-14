@@ -4,6 +4,9 @@ xRadius = 0.0
 yRadius = 0.0
 usedDeck = None
 deck = None
+won = False
+def win(name):
+    print(name + ' won the game!')
 class Player:
     def __init__(self, position, playable, window):
         self.position = position
@@ -12,6 +15,7 @@ class Player:
         self.cards = []
         self.button_pressed = False
         self.selectedIndex = 0
+        self.won = won
         if(position == 0 or position == 2):
             self.maxSize = xRadius - 168.0
         elif(position == 1 or position == 3):
@@ -23,32 +27,36 @@ class Player:
             if(card.moving):
                 card.move()
     def select(self, dt, keys):
-        if(self.button_pressed == False):
-            if(keys[pg.window.key.A]):
-                if(self.selectedIndex > 0):
+        if(self.won == False):
+            if(self.button_pressed == False):
+                if(keys[pg.window.key.A]):
+                    if(self.selectedIndex > 0):
+                        self.cards[self.selectedIndex].selected = False
+                        self.selectedIndex -= 1
+                        self.cards[self.selectedIndex].selected = True
+                        self.button_pressed = True
+                elif(keys[pg.window.key.D]):
+                    if(self.selectedIndex < len(self.cards) - 1):
+                        self.cards[self.selectedIndex].selected = False
+                        self.selectedIndex += 1
+                        self.cards[self.selectedIndex].selected = True
+                        #zwyciestwo!!
+                        self.button_pressed = True
+                elif(keys[pg.window.key.ENTER]):
                     self.cards[self.selectedIndex].selected = False
-                    self.selectedIndex -= 1
-                    self.cards[self.selectedIndex].selected = True
-                    self.button_pressed = True
-            elif(keys[pg.window.key.D]):
-                if(self.selectedIndex < len(self.cards) - 1):
-                    self.cards[self.selectedIndex].selected = False
-                    self.selectedIndex += 1
-                    self.cards[self.selectedIndex].selected = True
-                    #zwyciestwo!!
-                    self.button_pressed = True
-            elif(keys[pg.window.key.ENTER]):
-                self.cards[self.selectedIndex].selected = False
-                self.removeCard(self.selectedIndex)
-                self.selectedIndex = 0
-                self.cards[self.selectedIndex].selected = True
-            elif(keys[pg.window.key.SPACE]):
-                if(self.selectedIndex < len(self.cards) - 1):
+                    self.removeCard(self.selectedIndex)
+                    if (len(self.cards) == 0):
+                        win("Player 0")
+                        self.won = True
+                    else:
+                        self.selectedIndex = 0
+                        self.cards[self.selectedIndex].selected = True
+                elif(keys[pg.window.key.SPACE]):
                     self.addCards(1)
                     self.button_pressed = True
-        else:
-            if(keys[pg.window.key.A] == False and keys[pg.window.key.D] == False and keys[pg.window.key.ENTER] == False and keys[pg.window.key.SPACE] == False):
-                self.button_pressed = False
+            else:
+                if(keys[pg.window.key.A] == False and keys[pg.window.key.D] == False and keys[pg.window.key.ENTER] == False and keys[pg.window.key.SPACE] == False):
+                    self.button_pressed = False
     def addCards(self, count):
         if(self.playable):
             for card in self.cards:
@@ -134,11 +142,14 @@ class Used:
         self.xloc = 0.0
         self.yloc = 0.0
         self.zRot = 0.0
+        self.counter = 0
     def add_card(self, card):
         card.x = self.xloc
         card.y = self.yloc
         card.zRot = self.zRot
         card.moving = True
+        card.setOrder(self.counter)
+        self.counter += 1
         self.cards.append(card)
     def draw(self):
         pg.graphics.glPushMatrix()

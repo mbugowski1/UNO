@@ -201,7 +201,7 @@ class Card:
         self.front = self.createField('front')
         self.back = self.createField('back')
     def setOrder(self, number):
-        self.distance += number*0.2
+        self.distance += number*(-self.depth)+0.2
     def move(self):
         #moving X
         if(self.px == self.x):
