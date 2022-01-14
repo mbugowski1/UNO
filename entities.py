@@ -146,6 +146,8 @@ class Used:
         self.zRot = 0.0
         self.counter = 0
     def add_card(self, card):
+        if(len(self.cards) >= 10):
+            self.cards.pop(0)
         card.x = self.xloc
         card.y = self.yloc
         card.zRot = (self.zRot + random() * 100.0 - 50.0) % 360.0
