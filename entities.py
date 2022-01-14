@@ -51,6 +51,7 @@ class Player:
                     else:
                         self.selectedIndex = 0
                         self.cards[self.selectedIndex].selected = True
+                    self.button_pressed = True
                 elif(keys[pg.window.key.SPACE]):
                     self.addCards(1)
                     self.button_pressed = True
