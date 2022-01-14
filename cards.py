@@ -248,13 +248,8 @@ class Card:
         #rotating Y
         if(self.pyRot == self.yRot):
             self.pyRot = self.yRot
-        elif(abs(self.pyRot - self.yRot) < self.rotating_speed):
-            self.pyRot = self.yRot
         else:
-            if(self.pyRot < self.yRot):
-                self.pyRot += self.rotating_speed
-            else:
-                self.pyRot -= self.rotating_speed
+            self.pyRot = (self.pyRot + (self.yRot - self.pyRot) / self.rotating_speed) % 360.0
 
         #rotating Z
         if(self.pzRot == self.zRot):
