@@ -1,4 +1,5 @@
 import pyglet as pg
+from random import random
 from cards import Card, cardHeight, cardWidth
 xRadius = 0.0
 yRadius = 0.0
@@ -147,7 +148,7 @@ class Used:
     def add_card(self, card):
         card.x = self.xloc
         card.y = self.yloc
-        card.zRot = self.zRot
+        card.zRot = (self.zRot + random() * 100.0 - 50.0) % 360.0
         card.moving = True
         card.setOrder(self.counter)
         self.counter += 1

@@ -4,7 +4,6 @@ import entities
 distance = 500.0
 rotOX = 0.0
 rotOY = 0.0
-
 entities.xRadius = 368.0
 entities.yRadius = 207.0
 
