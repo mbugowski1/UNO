@@ -179,7 +179,7 @@ class Card:
         self.distance = 0.0
         self.edges = Group()
         self.moving = False
-        self.moving_speed = 5.0
+        self.moving_speed = 30.0
         self.rotating_speed = 5.0
 
         self.yRot = 0.0
