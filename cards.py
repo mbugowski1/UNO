@@ -161,7 +161,6 @@ class Card:
         tex_coords = [0.0,0.0, 0.0,0.575, 0.8,0.575, 0.8,0.0]
         batch.add(4, GL_QUADS, group, ('v3f', vertex), ('t2f', tex_coords))
         return batch
-        #return vertex_list(4, ('v3f', vertex), ('c3f', color), ('t2f', tex_coords))
     def get_tex(self, file):
         tex = image.load(file).get_texture()
         glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR)
@@ -173,16 +172,11 @@ class Card:
         self.back_tex = self.get_tex('cardTextures/back.png')
         loc = 'cardTextures/'
         self.front_tex = self.get_tex(loc + self.name + self.color + '.png')
-        #if(self.name == 'colorChange'):
-        #    self.front_tex = self.get_tex('cardTextures/colorChange.png')
-        #elif(self.name == 'stop'):
-        #    self.front_tex = self.get_tex(loc + 'stop.png')
-        #else:
-        #    self.front_tex = self.get_tex(loc + self.name + self.color + '.png')
 
-    def __init__(self, name, color):
+    def __init__(self, name, color, depth = -2.0):
         self.batch = Batch()
-        self.depth = -2.0
+        self.depth = depth
+        self.distance = 0.0
         self.edges = Group()
         self.moving = False
         self.moving_speed = 5.0
@@ -190,12 +184,12 @@ class Card:
 
         self.yRot = 0.0
         self.pyRot = 0.0
-        self.x = 0
-        self.px = 0
-        self.y = 0
-        self.py = 0
-        self.zRot = 0
-        self.pzRot = 0
+        self.x = 100.0
+        self.px = 100.0
+        self.y = 0.0
+        self.py = 0.0
+        self.zRot = 0.0
+        self.pzRot = 0.0
         self.name = name
         self.color = color
 
@@ -207,7 +201,7 @@ class Card:
         self.front = self.createField('front')
         self.back = self.createField('back')
     def setOrder(self, number):
-        self.depth += number*0.2
+        self.distance += number*0.2
     def move(self):
         #moving X
         if(self.px == self.x):
@@ -278,7 +272,7 @@ class Card:
         else:
             add = 0.0
         glPushMatrix()
-        glTranslatef(self.px, self.py, self.depth + add)
+        glTranslatef(self.px, self.py, self.distance + add)
         glRotatef(180.0, 0, 1, 0)
         glRotatef(self.pyRot, 0, 1, 0)
         glRotatef(self.pzRot, 0, 0, 1)

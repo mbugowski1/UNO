@@ -15,6 +15,7 @@ class Player:
         self.window = window
         self.cards = []
         self.button_pressed = False
+        self.selectedIndex = 0
         if(position == 0 or position == 2):
             self.maxSize = xRadius - 168.0
         elif(position == 1 or position == 3):
@@ -39,13 +40,20 @@ class Player:
                     self.selectedIndex += 1
                     self.cards[self.selectedIndex].selected = True
                     self.button_pressed = True
+            elif(keys[pg.window.key.ENTER]):
+                if(self.selectedIndex < len(self.cards) - 1):
+                    self.addCards(1)
+                    self.button_pressed = True
         else:
-            if(keys[pg.window.key.A] == False and keys[pg.window.key.D] == False):
+            if(keys[pg.window.key.A] == False and keys[pg.window.key.D] == False and keys[pg.window.key.ENTER] == False):
                 self.button_pressed = False
     def addCards(self, count):
+        if(self.playable):
+            for card in self.cards:
+                card.selected = False
         self.selectedIndex = 0
         for x in range(count):
-            card = Card('stop', None)
+            card = Card('+2', 'blue')
             if(self.position == 0):
                 card.zRot = 0.0
             elif(self.position == 1):
@@ -120,6 +128,10 @@ class Window(pg.window.Window):
         pg.gl.glMatrixMode(pg.gl.GL_MODELVIEW)
         pg.gl.glLoadIdentity()
 
+        #deck
+        self.deck = Card("stop", None, -40.0)
+        self.deck.distance = -40.0
+        #players
         self.player1 = Player(0, True, self)
         self.player2 = Player(1, False, self)
         self.player3 = Player(2, False, self)
@@ -138,6 +150,7 @@ class Window(pg.window.Window):
         pg.graphics.glRotatef(rotOX, 1, 0, 0)
         pg.graphics.glRotatef(rotOY, 0, 1, 0)
         #drawing models
+        self.deck.draw()
         self.player1.draw()
         self.player2.draw()
         self.player3.draw()
