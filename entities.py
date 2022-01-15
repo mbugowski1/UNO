@@ -128,16 +128,6 @@ class Player:
         self.selectedIndex = 0
         for x in range(count):
             card = Card()
-            if(self.position == 0):
-                card.zRot = 0.0
-            elif(self.position == 1):
-                card.zRot = 90.0
-            elif(self.position == 2):
-                card.zRot = 180.0
-            elif(self.position == 3):
-                card.zRot = 270.0
-            if(self.playable or Player.debug):
-                card.yRot = 180.0
             self.cards.append(card)
         self.positionCards()
         if(self.playable):
@@ -233,6 +223,16 @@ class Player:
                 self.cards[x].x = -xRadius + cardHeight/2 + 20
             elif(self.position == 3):
                 self.cards[x].x = (-xRadius + cardHeight/2 + 20) * -1
+            if(self.position == 0):
+                self.cards[x].zRot = 0.0
+            elif(self.position == 1):
+                self.cards[x].zRot = 270.0
+            elif(self.position == 2):
+                self.cards[x].zRot = 180.0
+            elif(self.position == 3):
+                self.cards[x].zRot = 90.0
+            if(self.playable or Player.debug):
+                self.cards[x].yRot = 180.0
             self.cards[x].moving = True
     def end_turn(self):
         Player.turn = (Player.turn + 1) % Player.playerCount
