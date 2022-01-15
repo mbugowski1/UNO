@@ -169,10 +169,12 @@ class Card:
         return TextureGroup(tex)
     def assign_texture(self):
         if (self.color == None):
-            self.color = ''
+            color = ''
+        else:
+            color = self.color
         self.back_tex = self.get_tex('cardTextures/back.png')
         loc = 'cardTextures/'
-        self.front_tex = self.get_tex(loc + self.name + self.color + '.png')
+        self.front_tex = self.get_tex(loc + self.name + color + '.png')
     def rand_card(self):
         chosenName = random.randint(1, 13)
         if chosenName == 10:

@@ -55,7 +55,7 @@ class Window(pg.window.Window):
         self.player3.update(dt, self.keys)
         self.player4.update(dt, self.keys)
         entities.usedDeck.update(dt)
-        print(pg.clock.get_fps())
+        #print(pg.clock.get_fps())
 
 if __name__ == '__main__':
     config = pg.gl.Config(sample_buffers=1, samples=4)

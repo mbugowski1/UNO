@@ -44,14 +44,15 @@ class Player:
                         #zwyciestwo!!
                         self.button_pressed = True
                 elif(keys[pg.window.key.ENTER]):
-                    self.throwCard(self.selectedIndex)
+                    self.button_pressed = True
+                    if(self.throwCard(self.selectedIndex) == False):
+                        return
                     if (len(self.cards) == 0):
                         win("Player 0")
                         self.won = True
                     else:
                         self.selectedIndex = 0
                         self.cards[self.selectedIndex].selected = True
-                    self.button_pressed = True
                 elif(keys[pg.window.key.SPACE]):
                     self.addCards(1)
                     self.button_pressed = True
@@ -85,12 +86,15 @@ class Player:
         else:
             return False
     def throwCard(self, index):
-        if(self.playable):
-            self.cards[self.selectedIndex].selected = False
         card = self.cards[index]
-        usedDeck.add_card(card)
-        self.cards.remove(card)
-        self.positionCards()
+        if(self.matchingCard(usedDeck.lastCard(), card)):
+            if(self.playable):
+                card.selected = False
+            usedDeck.add_card(card)
+            self.cards.remove(card)
+            self.positionCards()
+            return True
+        return False
     def positionCards(self):
         if (len(self.cards)%2 == 0):
             parzyste = cardWidth/2+5
@@ -147,7 +151,12 @@ class Deck:
         self.card.draw()
 class Used:
     def __init__(self):
-        self.cards = []
+        firstCard = Card()
+        firstCard.x = 0
+        firstCard.y = 0
+        firstCard.yRot = 180.0
+        firstCard.moving = True
+        self.cards = [firstCard]
         self.xloc = 0.0
         self.yloc = 0.0
         self.zRot = 0.0
@@ -158,10 +167,13 @@ class Used:
         card.x = self.xloc
         card.y = self.yloc
         card.zRot = (self.zRot + random() * 100.0 - 50.0) % 360.0
+        card.yRot = 180.0
         card.moving = True
         card.setOrder(self.counter)
         self.counter += 1
         self.cards.append(card)
+    def lastCard(self):
+        return self.cards[len(self.cards)-1]
     def draw(self):
         pg.graphics.glPushMatrix()
         for card in self.cards:
