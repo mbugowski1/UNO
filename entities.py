@@ -20,6 +20,7 @@ class Player:
         self.selectedIndex = 0
         self.requestedToTakeCards = 0
         self.forcedReposition = False
+        self.playing = False
         if(self.playable == False):
             self.waited = 0
         if(position == 0 or position == 2):
@@ -73,6 +74,9 @@ class Player:
     def update(self, dt, keys):
         if(self.position == Player.turn):
             if(self.playable):
+                if(self.playing == False):
+                    self.playing = True
+                    self.cards[self.selectedIndex].selected = True
                 self.select(dt, keys)
             else:
                 self.AI()
@@ -104,11 +108,8 @@ class Player:
                         return
                     else:
                         return
-                if(self.throwCard(self.selectedIndex) == False):
-                    return
-                if (Player.won == False):
+                if(self.throwCard(self.selectedIndex)):
                     self.selectedIndex = 0
-                    self.cards[self.selectedIndex].selected = True
                     self.end_turn()
             elif(keys[pg.window.key.SPACE]):
                 if(self.requestedToTakeCards != 0):
@@ -226,6 +227,9 @@ class Player:
             self.cards[x].moving = True
     def end_turn(self):
         Player.turn = (Player.turn + 1) % Player.playerCount
+        if(self.playable):
+            self.cards[self.selectedIndex].selected = False
+        self.playing = False
     def draw(self):
         pg.graphics.glPushMatrix()
         for card in self.cards:
