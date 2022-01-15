@@ -46,8 +46,9 @@ class Window(pg.window.Window):
             player.draw()
         pg.graphics.glPopMatrix()
     def update(self, dt):
-        for player in self.players:
-            player.update(dt, self.keys)
+        if entities.Player.won == False:
+            for player in self.players:
+                player.update(dt, self.keys)
         entities.usedDeck.update(dt)
         #print(pg.clock.get_fps())
 

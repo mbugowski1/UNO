@@ -1,5 +1,5 @@
 import pyglet as pg
-from random import random
+from random import random, randint
 from cards import Card, cardHeight, cardWidth
 xRadius = 0.0
 yRadius = 0.0
@@ -7,6 +7,8 @@ usedDeck = None
 deck = None
 class Player:
     won = False
+    playerCount = 4
+    turn = 0
     def __init__(self, position, playable, window):
         self.position = position
         self.playable = playable
@@ -14,49 +16,79 @@ class Player:
         self.cards = []
         self.button_pressed = False
         self.selectedIndex = 0
-        self.requestedToTakeCards = False
+        self.requestedToTakeCards = 0
+        if(self.playable == False):
+            self.waited = 0
         if(position == 0 or position == 2):
             self.maxSize = xRadius - 168.0
         elif(position == 1 or position == 3):
             self.maxSize = yRadius - 107.0
         self.addCards(7)
+    def AI(self):
+        if(self.waited < 20):
+            self.waited += 1
+            return
+        self.waited = 0
+        if(self.requestedToTakeCards != 0):
+            for x in range(len(self.cards)):
+                if self.cards[x].name == 'stop':
+                    self.throwCard(x)
+                    self.end_turn()
+                    return
+            self.addCards(self.requestedToTakeCards)
+            self.end_turn()
+            return
+        playableIndexes = []
+        lastCard = usedDeck.lastCard()
+        for x in range(len(self.cards)):
+            if(self.matchingCard(lastCard, self.cards[x])):
+                playableIndexes.append(x)
+        print(len(playableIndexes), self.position)
+        if(len(playableIndexes) == 0):
+            self.addCards(1)
+            self.end_turn()
+            return
+        index = playableIndexes[randint(0, len(playableIndexes)-1)]
+        self.throwCard(index)
+        self.end_turn()
     def update(self, dt, keys):
-        if(self.playable):
-            self.select(dt, keys)
+        if(self.position == Player.turn):
+            if(self.playable):
+                self.select(dt, keys)
+            else:
+                self.AI()
         for card in self.cards:
             if(card.moving):
                 card.move()
     def select(self, dt, keys):
-        if(Player.won == False):
-            if(self.button_pressed == False):
-                if(keys[pg.window.key.A]):
-                    if(self.selectedIndex > 0):
-                        self.cards[self.selectedIndex].selected = False
-                        self.selectedIndex -= 1
-                        self.cards[self.selectedIndex].selected = True
-                        self.button_pressed = True
-                elif(keys[pg.window.key.D]):
-                    if(self.selectedIndex < len(self.cards) - 1):
-                        self.cards[self.selectedIndex].selected = False
-                        self.selectedIndex += 1
-                        self.cards[self.selectedIndex].selected = True
-                        self.button_pressed = True
-                elif(keys[pg.window.key.ENTER]):
+        if(self.button_pressed == False):
+            if(keys[pg.window.key.A]):
+                if(self.selectedIndex > 0):
+                    self.cards[self.selectedIndex].selected = False
+                    self.selectedIndex -= 1
+                    self.cards[self.selectedIndex].selected = True
                     self.button_pressed = True
-                    if(self.throwCard(self.selectedIndex) == False):
-                        return
-                    if (len(self.cards) == 0):
-                        print("Player 0 won")
-                        Player.won = True
-                    else:
-                        self.selectedIndex = 0
-                        self.cards[self.selectedIndex].selected = True
-                elif(keys[pg.window.key.SPACE]):
-                    self.addCards(1)
+            elif(keys[pg.window.key.D]):
+                if(self.selectedIndex < len(self.cards) - 1):
+                    self.cards[self.selectedIndex].selected = False
+                    self.selectedIndex += 1
+                    self.cards[self.selectedIndex].selected = True
                     self.button_pressed = True
-            else:
-                if(keys[pg.window.key.A] == False and keys[pg.window.key.D] == False and keys[pg.window.key.ENTER] == False and keys[pg.window.key.SPACE] == False):
-                    self.button_pressed = False
+            elif(keys[pg.window.key.ENTER]):
+                self.button_pressed = True
+                if(self.throwCard(self.selectedIndex) == False):
+                    return
+                if (Player.won == False):
+                    self.selectedIndex = 0
+                    self.cards[self.selectedIndex].selected = True
+                    self.end_turn()
+            elif(keys[pg.window.key.SPACE]):
+                self.addCards(1)
+                self.button_pressed = True
+                self.end_turn()
+        else:
+            if(keys[pg.window.key.A] == False and keys[pg.window.key.D] == False and keys[pg.window.key.ENTER] == False and keys[pg.window.key.SPACE] == False):
+                self.button_pressed = False
     def addCards(self, count):
         if(self.playable):
             for card in self.cards:
@@ -90,6 +122,9 @@ class Player:
                 card.selected = False
             usedDeck.add_card(card)
             self.cards.remove(card)
+            if(len(self.cards) == 0):
+                Player.won = True
+                print("Player", self.position, "won")
             self.positionCards()
             return True
         return False
@@ -138,6 +173,8 @@ class Player:
             elif(self.position == 3):
                 self.cards[x].x = (-xRadius + cardHeight/2 + 20) * -1
             self.cards[x].moving = True
+    def end_turn(self):
+        Player.turn = (Player.turn + 1) % Player.playerCount
     def draw(self):
         pg.graphics.glPushMatrix()
         for card in self.cards:
