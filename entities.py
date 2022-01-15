@@ -8,7 +8,9 @@ deck = None
 class Player:
     won = False
     playerCount = 4
+    players = []
     turn = 0
+    debug = False
     def __init__(self, position, playable, window):
         self.position = position
         self.playable = playable
@@ -36,21 +38,37 @@ class Player:
                     self.end_turn()
                     return
             self.addCards(self.requestedToTakeCards)
+            self.requestedToTakeCards = 0
             self.end_turn()
             return
         playableIndexes = []
+        colorChangeCards = []
+        stopCards = []
         lastCard = usedDeck.lastCard()
         for x in range(len(self.cards)):
-            if(self.matchingCard(lastCard, self.cards[x])):
-                playableIndexes.append(x)
-        print(len(playableIndexes), self.position)
-        if(len(playableIndexes) == 0):
+            card = self.cards[x]
+            if(self.matchingCard(lastCard, card)):
+                if(card.name == 'colorChange'):
+                    colorChangeCards.append(x)
+                elif(card.name == 'stop'):
+                    stopCards.append(x)
+                else:
+                    playableIndexes.append(x)
+        if(len(playableIndexes) != 0):
+            index = playableIndexes[randint(0, len(playableIndexes)-1)]
+            self.throwCard(index)
+            self.end_turn()
+        elif(len(colorChangeCards) != 0):
+            index = colorChangeCards[randint(0, len(colorChangeCards)-1)]
+            self.throwCard(index)
+            self.end_turn()
+        elif(len(stopCards) != 0):
+            index = stopCards[randint(0, len(stopCards)-1)]
+            self.throwCard(index)
+            self.end_turn()
+        else:
             self.addCards(1)
             self.end_turn()
-            return
-        index = playableIndexes[randint(0, len(playableIndexes)-1)]
-        self.throwCard(index)
-        self.end_turn()
     def update(self, dt, keys):
         if(self.position == Player.turn):
             if(self.playable):
@@ -76,6 +94,13 @@ class Player:
                     self.button_pressed = True
             elif(keys[pg.window.key.ENTER]):
                 self.button_pressed = True
+                if(self.requestedToTakeCards != 0):
+                    if(self.cards[self.selectedIndex].name == 'stop'):
+                        self.throwCard(self.selectedIndex)
+                        self.end_turn()
+                        return
+                    else:
+                        return
                 if(self.throwCard(self.selectedIndex) == False):
                     return
                 if (Player.won == False):
@@ -83,7 +108,11 @@ class Player:
                     self.cards[self.selectedIndex].selected = True
                     self.end_turn()
             elif(keys[pg.window.key.SPACE]):
-                self.addCards(1)
+                if(self.requestedToTakeCards != 0):
+                    self.addCards(self.requestedToTakeCards)
+                    self.requestedToTakeCards = 0
+                else:
+                    self.addCards(1)
                 self.button_pressed = True
                 self.end_turn()
         else:
@@ -104,7 +133,7 @@ class Player:
                 card.zRot = 180.0
             elif(self.position == 3):
                 card.zRot = 270.0
-            if(self.playable):
+            if(self.playable or Player.debug):
                 card.yRot = 180.0
             self.cards.append(card)
         self.positionCards()
@@ -120,6 +149,14 @@ class Player:
         if(self.matchingCard(usedDeck.lastCard(), card)):
             if(self.playable):
                 card.selected = False
+            if(card.name == '+2'):
+                nextPlayer = (Player.turn + 1) % Player.playerCount
+                Player.players[nextPlayer].requestedToTakeCards = 2
+            elif(card.name == '+3'):
+                nextPlayer = (Player.turn + 1) % Player.playerCount
+                Player.players[nextPlayer].requestedToTakeCards = 3
+            elif(card.name == 'stop'):
+                self.requestedToTakeCards = 0
             usedDeck.add_card(card)
             self.cards.remove(card)
             if(len(self.cards) == 0):

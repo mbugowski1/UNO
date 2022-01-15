@@ -24,7 +24,8 @@ class Window(pg.window.Window):
         entities.deck = entities.Deck(-40.0)
         entities.usedDeck = entities.Used()
         #players
-        self.players = [
+        entities.Player.debug = True
+        entities.Player.players = [
             entities.Player(0, True, self),
             entities.Player(1, False, self),
             entities.Player(2, False, self),
@@ -42,12 +43,12 @@ class Window(pg.window.Window):
         #drawing models
         entities.deck.draw()
         entities.usedDeck.draw()
-        for player in self.players:
+        for player in entities.Player.players:
             player.draw()
         pg.graphics.glPopMatrix()
     def update(self, dt):
         if entities.Player.won == False:
-            for player in self.players:
+            for player in entities.Player.players:
                 player.update(dt, self.keys)
         entities.usedDeck.update(dt)
         #print(pg.clock.get_fps())
