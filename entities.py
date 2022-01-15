@@ -65,7 +65,7 @@ class Player:
                 card.selected = False
         self.selectedIndex = 0
         for x in range(count):
-            card = Card('+2', 'blue')
+            card = Card()
             if(self.position == 0):
                 card.zRot = 0.0
             elif(self.position == 1):

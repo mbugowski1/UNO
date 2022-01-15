@@ -1,5 +1,6 @@
 from pyglet.graphics import *
 from pyglet import image
+import random
 import math
 cardWidth = 60
 cardHeight = 90
@@ -172,8 +173,28 @@ class Card:
         self.back_tex = self.get_tex('cardTextures/back.png')
         loc = 'cardTextures/'
         self.front_tex = self.get_tex(loc + self.name + self.color + '.png')
-
-    def __init__(self, name, color, depth = -2.0):
+    def rand_card(self):
+        chosenName = random.randint(1, 13)
+        if chosenName == 10:
+            self.name = "handleCards"
+        elif chosenName == 11:
+            self.name = "colorChange"
+            return
+        elif chosenName == 12:
+            self.name = "stop"
+            return
+        elif chosenName == 13:
+            self.name = "+2"
+        else:
+            self.name = str(chosenName)
+        chosenColor = random.randint(1, 3)
+        if chosenColor == 1:
+            self.color = "blue"
+        elif chosenColor == 2:
+            self.color = "red"
+        else:
+            self.color = "yellow"
+    def __init__(self, name = None, color = None, depth = -2.0):
         self.batch = Batch()
         self.depth = depth
         self.distance = 0.0
@@ -192,6 +213,9 @@ class Card:
         self.pzRot = 0.0
         self.name = name
         self.color = color
+
+        if(self.name == None):
+            self.rand_card()
 
         #declare elements
         self.selected = False
