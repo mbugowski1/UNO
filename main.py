@@ -24,14 +24,12 @@ class Window(pg.window.Window):
         entities.deck = entities.Deck(-40.0)
         entities.usedDeck = entities.Used()
         #players
-        self.player1 = entities.Player(0, True, self)
-        self.player2 = entities.Player(1, False, self)
-        self.player3 = entities.Player(2, False, self)
-        self.player4 = entities.Player(3, False, self)
-        self.player1.addCards(3)
-        self.player2.addCards(5)
-        self.player3.addCards(11)
-        self.player4.addCards(3)
+        self.players = [
+            entities.Player(0, True, self),
+            entities.Player(1, False, self),
+            entities.Player(2, False, self),
+            entities.Player(3, False, self)
+        ]
 
     def on_resize(self, width, height):
         pg.gl.glViewport(0, 0, width, height)
@@ -44,16 +42,12 @@ class Window(pg.window.Window):
         #drawing models
         entities.deck.draw()
         entities.usedDeck.draw()
-        self.player1.draw()
-        self.player2.draw()
-        self.player3.draw()
-        self.player4.draw()
+        for player in self.players:
+            player.draw()
         pg.graphics.glPopMatrix()
     def update(self, dt):
-        self.player1.update(dt, self.keys)
-        self.player2.update(dt, self.keys)
-        self.player3.update(dt, self.keys)
-        self.player4.update(dt, self.keys)
+        for player in self.players:
+            player.update(dt, self.keys)
         entities.usedDeck.update(dt)
         #print(pg.clock.get_fps())
 

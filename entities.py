@@ -22,6 +22,7 @@ class Player:
             self.maxSize = xRadius - 168.0
         elif(position == 1 or position == 3):
             self.maxSize = yRadius - 107.0
+        self.addCards(7)
     def update(self, dt, keys):
         if(self.playable):
             self.select(dt, keys)
@@ -129,6 +130,9 @@ class Player:
             if(horizontal):
                 if (self.cards[len(self.cards)-1].x > self.maxSize):
                     self.cards[x].x *= self.maxSize/self.cards[len(self.cards)-1].x
+            else:
+                if (self.cards[len(self.cards)-1].y > self.maxSize):
+                    self.cards[x].y *= self.maxSize/self.cards[len(self.cards)-1].y
             if(self.position == 0):
                 self.cards[x].y = -yRadius + cardHeight/2 + 20
             elif(self.position == 2):
