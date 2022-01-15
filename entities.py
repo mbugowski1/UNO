@@ -84,6 +84,7 @@ class Player:
         card = self.cards[index]
         usedDeck.add_card(card)
         self.cards.remove(card)
+        self.positionCards()
     def positionCards(self):
         if (len(self.cards)%2 == 0):
             parzyste = cardWidth/2+5
