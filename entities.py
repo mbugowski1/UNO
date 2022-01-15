@@ -5,10 +5,8 @@ xRadius = 0.0
 yRadius = 0.0
 usedDeck = None
 deck = None
-won = False
-def win(name):
-    print(name + ' won the game!')
 class Player:
+    won = False
     def __init__(self, position, playable, window):
         self.position = position
         self.playable = playable
@@ -16,7 +14,6 @@ class Player:
         self.cards = []
         self.button_pressed = False
         self.selectedIndex = 0
-        self.won = won
         self.requestedToTakeCards = False
         if(position == 0 or position == 2):
             self.maxSize = xRadius - 168.0
@@ -30,7 +27,7 @@ class Player:
             if(card.moving):
                 card.move()
     def select(self, dt, keys):
-        if(self.won == False):
+        if(Player.won == False):
             if(self.button_pressed == False):
                 if(keys[pg.window.key.A]):
                     if(self.selectedIndex > 0):
@@ -43,15 +40,14 @@ class Player:
                         self.cards[self.selectedIndex].selected = False
                         self.selectedIndex += 1
                         self.cards[self.selectedIndex].selected = True
-                        #zwyciestwo!!
                         self.button_pressed = True
                 elif(keys[pg.window.key.ENTER]):
                     self.button_pressed = True
                     if(self.throwCard(self.selectedIndex) == False):
                         return
                     if (len(self.cards) == 0):
-                        win("Player 0")
-                        self.won = True
+                        print("Player 0 won")
+                        Player.won = True
                     else:
                         self.selectedIndex = 0
                         self.cards[self.selectedIndex].selected = True
