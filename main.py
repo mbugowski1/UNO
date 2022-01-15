@@ -24,7 +24,7 @@ class Window(pg.window.Window):
         entities.deck = entities.Deck(-40.0)
         entities.usedDeck = entities.Used()
         #players
-        entities.Player.debug = True
+        entities.Player.debug = False
         entities.Player.players = [
             entities.Player(0, True, self),
             entities.Player(1, False, self),
