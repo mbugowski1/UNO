@@ -147,6 +147,8 @@ class Player:
     def throwCard(self, index):
         card = self.cards[index]
         if(self.matchingCard(usedDeck.lastCard(), card)):
+            if(self.playable):
+                self.cards[index].selected = False
             usedDeck.add_card(card)
             self.cards.remove(card)
             if(len(self.cards) == 0):

@@ -203,7 +203,8 @@ class Card:
         self.edges = Group()
         self.moving = False
         self.moving_speed = 30.0
-        self.rotating_speed = 5.0
+        self.Zrotating_speed = 5.0
+        self.Yrotating_speed = 1.0
 
         self.yRot = 0.0
         self.pyRot = 0.0
@@ -275,14 +276,14 @@ class Card:
         if(self.pyRot == self.yRot):
             self.pyRot = self.yRot
         else:
-            self.pyRot = (self.pyRot + (self.yRot - self.pyRot) / self.rotating_speed) % 360.0
+            self.pyRot = (self.pyRot + (self.yRot - self.pyRot) / self.Yrotating_speed) % 360.0
 
         #rotating Z
         if(self.pzRot == self.zRot):
             self.pzRot = self.zRot
         else:
             #sub_rot(self.pzRot, self.zRot)
-            self.pzRot = (self.pzRot + (self.zRot - self.pzRot) / self.rotating_speed) % 360.0
+            self.pzRot = (self.pzRot + (self.zRot - self.pzRot) / self.Zrotating_speed) % 360.0
 
         if(self.py == self.y and self.px == self.x and self.pyRot == self.yRot and self.pzRot == self.zRot):
             self.moving = False
