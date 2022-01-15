@@ -157,16 +157,6 @@ class Player:
             elif(card.name == 'stop'):
                 self.requestedToTakeCards = 0
             elif(card.name == 'handleCards'):
-                #swap1 = player0
-
-                #swap2 = player1
-                #player1 = swap1
-                #swap1 = swap2
-
-                #swap2 = player2
-                #player2 = swap1
-                #swap1 = swap2
-
                 swap1 = Player.players[0].cards
                 swap2 = Player.players[1].cards
                 for x in range(1, Player.playerCount):
