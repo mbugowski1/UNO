@@ -66,11 +66,11 @@ class Player:
             index = playableIndexes[randint(0, len(playableIndexes)-1)]
             self.throwCard(index)
             self.end_turn()
-        elif(len(colorChangeCards) != 0):
+        elif((len(colorChangeCards) != 0 and len(Player.players[(Player.turn + 1) % Player.playerCount].cards) > 1) or (len(colorChangeCards) != 0 and len(self.cards) == 1)):
             index = colorChangeCards[randint(0, len(colorChangeCards)-1)]
             self.throwCard(index)
             self.end_turn()
-        elif(len(stopCards) != 0):
+        elif((len(stopCards) != 0 and len(Player.players[(Player.turn + 1) % Player.playerCount].cards) > 1) or (len(colorChangeCards) != 0 and len(self.cards) == 1)):
             index = stopCards[randint(0, len(stopCards)-1)]
             self.throwCard(index)
             self.end_turn()
