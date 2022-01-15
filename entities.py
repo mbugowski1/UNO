@@ -1,4 +1,3 @@
-from selectors import EpollSelector
 import pyglet as pg
 from random import random
 from cards import Card, cardHeight, cardWidth
@@ -28,11 +27,6 @@ class Player:
         for card in self.cards:
             if(card.moving):
                 card.move()
-    def matchingCard(self, lastCard, card):
-        if(lastCard.color == card.color or lastCard.color == None or card.color == None or lastCard.name == card.name):
-            return True
-        else:
-            return False
     def select(self, dt, keys):
         if(self.won == False):
             if(self.button_pressed == False):
@@ -50,12 +44,7 @@ class Player:
                         #zwyciestwo!!
                         self.button_pressed = True
                 elif(keys[pg.window.key.ENTER]):
-                    if(len(usedDeck.cards) > 0):
-                        lastCard = usedDeck.cards[len(usedDeck.cards)-1]
-                        card = self.cards[self.selectedIndex]
-                        if(lastCard.color == card.card or  == None or color == None)
-                    self.cards[self.selectedIndex].selected = False
-                    self.removeCard(self.selectedIndex)
+                    self.throwCard(self.selectedIndex)
                     if (len(self.cards) == 0):
                         win("Player 0")
                         self.won = True
@@ -90,7 +79,14 @@ class Player:
         self.positionCards()
         if(self.playable):
             self.cards[self.selectedIndex].selected = True
-    def removeCard(self, index):
+    def matchingCard(self, lastCard, card):
+        if(lastCard.color == card.color or lastCard.color == None or card.color == None or lastCard.name == card.name):
+            return True
+        else:
+            return False
+    def throwCard(self, index):
+        if(self.playable):
+            self.cards[self.selectedIndex].selected = False
         card = self.cards[index]
         usedDeck.add_card(card)
         self.cards.remove(card)
