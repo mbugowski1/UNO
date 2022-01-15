@@ -46,6 +46,7 @@ class Player:
         playableIndexes = []
         colorChangeCards = []
         stopCards = []
+        switchCards = []
         lastCard = usedDeck.lastCard()
         for x in range(len(self.cards)):
             card = self.cards[x]
@@ -54,9 +55,14 @@ class Player:
                     colorChangeCards.append(x)
                 elif(card.name == 'stop'):
                     stopCards.append(x)
+                elif(card.name == 'handleCards'):
+                    switchCards.append(x)
                 else:
                     playableIndexes.append(x)
-        if(len(playableIndexes) != 0):
+        if(len(switchCards) > 0 and (len(Player.players[(Player.turn - 1) % Player.playerCount].cards) < len(self.cards) - 1 or len(self.cards) == 1)):
+            self.throwCard(switchCards[0])
+            self.end_turn()
+        elif(len(playableIndexes) != 0):
             index = playableIndexes[randint(0, len(playableIndexes)-1)]
             self.throwCard(index)
             self.end_turn()
@@ -146,6 +152,7 @@ class Player:
             if(len(self.cards) == 0):
                 Player.won = True
                 print("Player", self.position, "won")
+                return True
             self.positionCards()
             if(self.playable):
                 card.selected = False
@@ -228,7 +235,8 @@ class Player:
     def end_turn(self):
         Player.turn = (Player.turn + 1) % Player.playerCount
         if(self.playable):
-            self.cards[self.selectedIndex].selected = False
+            if(len(self.cards) > 0):
+                self.cards[self.selectedIndex].selected = False
         self.playing = False
     def draw(self):
         pg.graphics.glPushMatrix()
