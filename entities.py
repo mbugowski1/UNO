@@ -19,6 +19,7 @@ class Player:
         self.button_pressed = False
         self.selectedIndex = 0
         self.requestedToTakeCards = 0
+        self.forcedReposition = False
         if(self.playable == False):
             self.waited = 0
         if(position == 0 or position == 2):
@@ -75,6 +76,8 @@ class Player:
                 self.select(dt, keys)
             else:
                 self.AI()
+        if(self.forcedReposition):
+            self.positionCards()
         for card in self.cards:
             if(card.moving):
                 card.move()
@@ -147,6 +150,12 @@ class Player:
     def throwCard(self, index):
         card = self.cards[index]
         if(self.matchingCard(usedDeck.lastCard(), card)):
+            usedDeck.add_card(card)
+            self.cards.remove(card)
+            if(len(self.cards) == 0):
+                Player.won = True
+                print("Player", self.position, "won")
+            self.positionCards()
             if(self.playable):
                 card.selected = False
             if(card.name == '+2'):
@@ -157,12 +166,27 @@ class Player:
                 Player.players[nextPlayer].requestedToTakeCards = 3
             elif(card.name == 'stop'):
                 self.requestedToTakeCards = 0
-            usedDeck.add_card(card)
-            self.cards.remove(card)
-            if(len(self.cards) == 0):
-                Player.won = True
-                print("Player", self.position, "won")
-            self.positionCards()
+            elif(card.name == 'handleCards'):
+                #swap1 = player0
+
+                #swap2 = player1
+                #player1 = swap1
+                #swap1 = swap2
+
+                #swap2 = player2
+                #player2 = swap1
+                #swap1 = swap2
+
+                swap1 = Player.players[0].cards
+                swap2 = Player.players[1].cards
+                for x in range(1, Player.playerCount):
+                    swap2 = Player.players[x].cards
+                    Player.players[x].cards = swap1
+                    swap1 = swap2
+                    Player.players[x].positionCards()
+                Player.players[0].cards = swap1
+                Player.players[0].positionCards()
+
             return True
         return False
     def positionCards(self):
