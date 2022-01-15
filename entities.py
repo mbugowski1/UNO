@@ -17,6 +17,7 @@ class Player:
         self.button_pressed = False
         self.selectedIndex = 0
         self.won = won
+        self.requestedToTakeCards = False
         if(position == 0 or position == 2):
             self.maxSize = xRadius - 168.0
         elif(position == 1 or position == 3):
