@@ -233,6 +233,8 @@ class Player:
                 self.cards[x].zRot = 90.0
             if(self.playable or Player.debug):
                 self.cards[x].yRot = 180.0
+            else:
+                self.cards[x].yRot = 0.0
             self.cards[x].moving = True
     def end_turn(self):
         Player.turn = (Player.turn + 1) % Player.playerCount
